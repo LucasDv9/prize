@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prize Sniper Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        #tagline-version {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hwid-display {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .hwid-display span {
+            font-weight: bold;
+            color: #1e3c72;
+            font-family: monospace;
+        }
+
+        .logout-btn {
+            background: #f87171;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-info-left {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .user-detail {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .slot-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .slot-counter {
+            background: #dbeafe;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .new-tab-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .new-tab-btn:hover {
+            background: #059669;
+        }
+
+        .new-tab-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .tabs-section {
+            margin-top: 20px;
+        }
+
+        .tabs-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        #tabs-list {
+            list-style: none;
+        }
+
+        .tab-empty {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        .tab-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .tab-item:hover {
+            background: #f3f4f6;
+        }
+
+        .tab-item.opening {
+            opacity: 0.7;
+        }
+
+        .tab-info {
+            flex: 1;
+        }
+
+        .tab-title {
+            font-weight: bold;
+            color: #1e3c72;
+            word-break: break-word;
+        }
+
+        .tab-sub {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .tab-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 10px;
+            text-transform: uppercase;
+        }
+
+        .tab-status.live {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .tab-status.opening {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tab-status.closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .tab-close {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .tab-close:hover {
+            background: #dc2626;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.hidden {
+            display: none !important;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1e3c72;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group input {
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3c72;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .update-banner {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .update-banner.hidden {
+            display: none !important;
+        }
+
+        .update-text {
+            color: #92400e;
+            font-size: 14px;
+        }
+
+        .update-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .update-actions button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        #update-apply {
+            background: #10b981;
+            color: white;
+        }
+
+        #update-apply:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        #update-apply:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        #update-dismiss {
+            background: #6b7280;
+            color: white;
+        }
+
+        #update-dismiss:hover {
+            background: #4b5563;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .admin-mode .admin-only {
+            display: block !important;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .tab-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tab-status,
+            .tab-close {
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .user-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .slot-info {
+                width: 100%;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <div class="header-title">🎯 Prize Sniper Hub</div>
+                <div class="header-subtitle">Gerenciador de abas automático</div>
+                <div id="tagline-version"></div>
+            </div>
+            <div class="header-right">
+                <div class="hwid-display">
+                    HWID: <span id="hwid-display">-</span>
+                </div>
+                <button id="logout-btn" class="logout-btn" style="display: none;">Sair</button>
+            </div>
+        </header>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen active">
+            <!-- Update Banner -->
+            <div id="update-banner" class="update-banner hidden">
+                <div>
+                    <span class="update-text">
+                        <strong>Nova atualização disponível!</strong>
+                    </span>
+                    <div id="update-version" style="font-size: 12px; margin-top: 5px;"></div>
+                    <div id="update-notes" style="font-size: 12px; margin-top: 5px;"></div>
+                </div>
+                <div class="update-actions">
+                    <button id="update-apply">Atualizar agora</button>
+                    <button id="update-dismiss">Descartar</button>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-info-left">
+                            <div class="user-name" id="user-name">-</div>
+                            <div class="user-detail">
+                                Expiração: <span id="expires-in">-</span>
+                            </div>
+                        </div>
+                        <div class="slot-info">
+                            <div class="slot-counter">
+                                Slots: <span id="slot-count">0/10</span>
+                            </div>
+                            <button id="new-tab-btn" class="new-tab-btn">+ Nova aba</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs-section">
+                    <div class="tabs-header">Abas Abertas</div>
+                    <ul id="tabs-list">
+                        <li class="tab-empty">Nenhuma aba aberta. Clique em "Nova aba" pra começar.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Tab Modal -->
+    <div id="new-tab-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">Abrir Nova Aba</div>
+
+            <div class="form-group">
+                <label class="form-label">Plataforma</label>
+                <select id="modal-platform" class="form-select">
+                    <option value="">Selecione uma plataforma ou cole URL abaixo</option>
+                    <option value="https://www.nike.com">Nike</option>
+                    <option value="https://www.adidas.com">Adidas</option>
+                    <option value="https://www.supremenewyork.com">Supreme</option>
+                    <option value="https://www.yeezysupply.com">Yeezy Supply</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">URL Customizada (opcional)</label>
+                <input id="modal-url" type="text" class="form-input" placeholder="https://exemplo.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Proxy (opcional)</label>
+                <input id="modal-proxy" type="text" class="form-input" placeholder="ip:porta ou ip:porta:user:pass">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <div class="checkbox-group">
+                        <input id="modal-monitor" type="checkbox">
+                        <span>Monitorar página</span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="modal-footer">
+                <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
+                <button id="modal-confirm" class="btn btn-primary">Abrir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM helpers
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+        const show = (id) => {
+            $$('.screen').forEach(s => s.classList.remove('active'));
+            $('#' + id).classList.add('active');
+        };
+        const showModal = (id) => $('#' + id).classList.remove('hidden');
+        const hideModal = (id) => $('#' + id).classList.add('hidden');
+
+        let state = {
+            user: null,
+            maxSlots: 0,
+            expiresAt: null,
+            tabs: [],
+        };
+
+        function formatExpires(epochMs) {
+            if (!epochMs) return '—';
+            const now = Date.now();
+            const diff = epochMs - now;
+            if (diff < 0) return 'expirada';
+            const days = Math.floor(diff / (24 * 3600 * 1000));
+            const hours = Math.floor((diff % (24 * 3600 * 1000)) / (3600 * 1000));
+            if (days > 1) return `${days}d ${hours}h`;
+            if (days === 1) return `1d ${hours}h`;
+            if (hours > 1) return `${hours}h`;
+            const mins = Math.floor(diff / 60000);
+            return `${mins}min`;
+        }
+
+        async function init() {
+            // Espera bridge ficar disponível (até 3s)
+            for (let i = 0; i < 30; i++) {
+                if (typeof window._hubBridge === 'function') break;
+                await new Promise(r => setTimeout(r, 100));
+            }
+            if (typeof window._hubBridge !== 'function') {
+                alert('Bridge não disponível. Feche e abra o app de novo.');
+                return;
+            }
+
+            try {
+                const r = await window._hubBridge('getHwid', {});
+                if (r && r.hwid) $('#hwid-display').textContent = r.hwid;
+                if (r && r.version) {
+                    state.appVersion = r.version;
+                    $('#tagline-version').textContent = 'v' + r.version + (r.admin ? ' · ADMIN' : '');
+                }
+                if (r && r.admin) {
+                    document.title = 'Prize Sniper Hub [ADMIN]';
+                    document.body.classList.add('admin-mode');
+                    document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+                }
+            } catch (e) { console.error(e); }
+
+            // Setup event listeners
+            $('#logout-btn').onclick = doLogout;
+
+            // Auto-login direto sem key
+            autoLoginDirect();
+
+            $('#new-tab-btn').onclick = () => {
+                if (state.tabs.length >= state.maxSlots) {
+                    alert('Você já está usando todos os ' + state.maxSlots + ' slots. Feche uma aba antes.');
+                    return;
+                }
+                $('#modal-url').value = '';
+                $('#modal-proxy').value = '';
+                showModal('new-tab-modal');
+            };
+            $('#modal-cancel').onclick = () => hideModal('new-tab-modal');
+            $('#modal-confirm').onclick = doNewTab;
+            $('#update-dismiss').onclick = () => $('#update-banner').classList.add('hidden');
+            $('#update-apply').onclick = applyUpdate;
+
+            // Verifica update em background
+            setTimeout(checkUpdate, 1500);
+        }
+
+        async function autoLoginDirect() {
+            try {
+                const r = await window._hubBridge('loginDirect', {});
+                if (r && r.ok) {
+                    state.user = r.user || 'user';
+                    state.maxSlots = r.max_slots || 10;
+                    state.expiresAt = r.expires_at || null;
+                    $('#user-name').textContent = state.user;
+                    $('#expires-in').textContent = formatExpires(state.expiresAt);
+                    updateSlotCount();
+                    show('dashboard-screen');
+                    $('#logout-btn').style.display = 'block';
+
+                    // Atualiza countdown a cada minuto
+                    if (state._expTimer) clearInterval(state._expTimer);
+                    state._expTimer = setInterval(() => {
+                        $('#expires-in').textContent = formatExpires(state.expiresAt);
+                    }, 60000);
+                } else {
+                    alert('Erro ao iniciar: ' + (r && r.error || 'desconhecido'));
+                }
+            } catch (e) {
+                alert('Erro: ' + (e.message || String(e)));
+            }
+        }
+
+        async function checkUpdate() {
+            try {
+                const r = await window._hubBridge('checkUpdate', {});
+                if (r && r.has_update) {
+                    state.updateVersion = r.latest;
+                    $('#update-version').textContent = r.latest;
+                    if (r.notes) $('#update-notes').textContent = '— ' + r.notes;
+                    $('#update-banner').classList.remove('hidden');
+                    if (r.auto_apply) {
+                        console.log('auto_apply: aplicando update consecutivo');
+                        applyUpdate();
+                    }
+                }
+            } catch (e) { console.error('checkUpdate', e); }
+        }
+
+        async function applyUpdate() {
+            if (!state.updateVersion) return;
+            $('#update-apply').disabled = true;
+            $('#update-apply').textContent = 'Baixando...';
+            try {
+                const r = await window._hubBridge('applyUpdate', { version: state.updateVersion });
+                if (r && r.ok) {
+                    $('#update-banner').innerHTML = '<span class="update-text">' +
+                        '<strong>Atualização baixada.</strong> Reiniciando em 1s...</span>';
+                } else {
+                    $('#update-apply').disabled = false;
+                    $('#update-apply').textContent = 'Atualizar agora';
+                    alert('Falha ao atualizar: ' + (r && r.error || 'desconhecido'));
+                }
+            } catch (e) {
+                $('#update-apply').disabled = false;
+                $('#update-apply').textContent = 'Atualizar agora';
+                alert('Erro: ' + e.message);
+            }
+        }
+
+        async function doLogout() {
+            await window._hubBridge('logout', {});
+            for (const tab of state.tabs.slice()) {
+                await closeTab(tab.id);
+            }
+            state.user = null;
+            state.maxSlots = 0;
+            state.tabs = [];
+            $('#logout-btn').style.display = 'none';
+            autoLoginDirect();
+        }
+
+        async function doNewTab() {
+            const sel = $('#modal-platform').value;
+            const custom = $('#modal-url').value.trim();
+            const proxy = $('#modal-proxy').value.trim();
+            const monitor = $('#modal-monitor') ? !!$('#modal-monitor').checked : false;
+            const url = custom || sel;
+            if (!url) { alert('Selecione plataforma ou cole URL'); return; }
+
+            hideModal('new-tab-modal');
+
+            const tabId = 'tab-' + Date.now();
+            const tab = { id: tabId, url, proxy, status: 'opening', title: hostFromUrl(url), monitor };
+            state.tabs.push(tab);
+            renderTabs();
+            updateSlotCount();
+
+            try {
+                const r = await window._hubBridge('openTab', { tabId, url, proxy, monitor });
+                if (r && r.ok) {
+                    tab.status = 'live';
+                    tab.title = r.title || hostFromUrl(url);
+                } else {
+                    tab.status = 'closed';
+                    tab.error = r && r.error || 'erro desconhecido';
+                    setTimeout(() => {
+                        state.tabs = state.tabs.filter(t => t.id !== tabId);
+                        renderTabs();
+                        updateSlotCount();
+                    }, 2500);
+                }
+            } catch (e) {
+                tab.status = 'closed';
+                tab.error = e.message;
+            }
+            renderTabs();
+        }
+
+        async function closeTab(tabId) {
+            try {
+                await window._hubBridge('closeTab', { tabId });
+            } catch (e) { console.error(e); }
+            state.tabs = state.tabs.filter(t => t.id !== tabId);
+            renderTabs();
+            updateSlotCount();
+        }
+
+        function renderTabs() {
+            const ul = $('#tabs-list');
+            if (state.tabs.length === 0) {
+                ul.innerHTML = '<li class="tab-empty">Nenhuma aba aberta. Clique em "Nova aba" pra começar.</li>';
+                return;
+            }
+            ul.innerHTML = '';
+            for (const tab of state.tabs) {
+                const li = document.createElement('li');
+                li.className = 'tab-item' + (tab.status === 'opening' ? ' opening' : '');
+                li.innerHTML = `
+                    <div class="tab-info">
+                        <div class="tab-title">${escapeHtml(tab.title)}</div>
+                        <div class="tab-sub">${tab.proxy ? '🔌 ' + escapeHtml(tab.proxy) : 'sem proxy'}${tab.error ? ' · <span style="color:#f87171">' + escapeHtml(tab.error) + '</span>' : ''}</div>
+                    </div>
+                    <span class="tab-status ${tab.status}">${tab.status}</span>
+                    <button class="tab-close" data-tab="${tab.id}">Fechar</button>
+                `;
+                ul.appendChild(li);
+            }
+            $$('.tab-close').forEach(btn => {
+                btn.onclick = () => closeTab(btn.dataset.tab);
+            });
+        }
+
+        function updateSlotCount() {
+            $('#slot-count').textContent = `${state.tabs.length}/${state.maxSlots}`;
+        }
+
+        function hostFromUrl(u) {
+            try { return new URL(u).host; } catch { return u; }
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
